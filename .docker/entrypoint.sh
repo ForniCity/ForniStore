@@ -27,8 +27,7 @@ fi
 chown www-data:www-data .env || true
 chmod 664 .env || true
 
-# Garante que o Laravel confia no proxy (assim respeita X-Forwarded-Proto=https)
-# e, opcionalmente, força o host dos assets se ASSET_URL vier do ambiente.
+# Helpers para .env
 ensure_env () {
   KEY="$1"; VAL="$2"
   if grep -qE "^${KEY}=" .env; then
@@ -38,20 +37,15 @@ ensure_env () {
   fi
 }
 
-# Confia em todos os proxies (adequado para PaaS como Railway)
+# Confia no proxy e (opcional) fixa ASSET_URL
 ensure_env "TRUSTED_PROXIES" "*"
-# Cabeçalhos padrão do Laravel (mantém auto)
 ensure_env "TRUSTED_HEADERS" "X_FORWARDED_FOR,X_FORWARDED_HOST,X_FORWARDED_PORT,X_FORWARDED_PROTO,X_FORWARDED_AWS_ELB"
-
-# Se ASSET_URL estiver no ambiente do Railway, grava no .env (opcional)
-if [ -n "${ASSET_URL:-}" ]; then
-  ensure_env "ASSET_URL" "${ASSET_URL}"
-fi
+if [ -n "${ASSET_URL:-}" ]; then ensure_env "ASSET_URL" "${ASSET_URL}"; fi
 
 # APP_KEY
 su -s /bin/sh -c 'php artisan key:generate --force || true' www-data
 
-# Permissões
+# Permissões essenciais
 chown -R www-data:www-data storage bootstrap/cache || true
 chmod -R ug+rw storage bootstrap/cache || true
 
@@ -62,6 +56,13 @@ if [ ! -e "public/storage" ]; then
     cp -R storage/app/public/* public/storage/ 2>/dev/null || true
     chown -R www-data:www-data public/storage
   fi
+fi
+
+# 🔧 COMPAT: alguns temas esperam /assets/* (ex: /assets/vendor/…)
+#         Cria um symlink public/assets -> public
+if [ ! -e "public/assets" ]; then
+  ln -sfn . public/assets
+  echo ">> Link de compat criado: public/assets -> public"
 fi
 
 # Limpa caches
@@ -77,4 +78,5 @@ for i in $(seq 1 $RETRIES); do
   sleep $SLEEP
 done
 
+echo ">> Iniciando serviços na porta ${PORT_DEFAULT}..."
 exec "$@"
