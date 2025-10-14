@@ -1,9 +1,14 @@
+FROM composer:2 AS composer_stage
+
 FROM php:8.3-fpm-alpine
 
 # Diretório da aplicação
 ENV APP_DIR=/var/www/azuriom
 
-# Pacotes e extensões
+# Copiamos o binário do Composer do stage
+COPY --from=composer_stage /usr/bin/composer /usr/bin/composer
+
+# Pacotes e extensões PHP
 RUN set -eux; \
     apk add --no-cache \
       nginx supervisor bash curl git tzdata ca-certificates \
@@ -17,31 +22,25 @@ RUN set -eux; \
     rm -rf /var/cache/apk/* /tmp/* /var/tmp/*
 
 # Diretórios de runtime e da app
-# Criamos o APP_DIR aqui e TAMBÉM no passo que faz o chown, para não depender de ordem/camadas.
 RUN set -eux; \
     mkdir -p /run/nginx /etc/nginx/conf.d /var/log/nginx "${APP_DIR}"
 
-# Copia configs
+# Configurações
 COPY .docker/nginx.conf /etc/nginx/nginx.conf
 COPY .docker/nginx-default.conf /etc/nginx/conf.d/default.conf
 COPY .docker/zz-custom.ini /usr/local/etc/php/conf.d/zz-custom.ini
 COPY .docker/supervisord.conf /etc/supervisord.conf
 COPY .docker/entrypoint.sh /usr/local/bin/entrypoint.sh
-
-# Permissão do entrypoint
 RUN chmod +x /usr/local/bin/entrypoint.sh
 
-# Este é o ponto onde sua build falhava — agora garantimos o diretório ANTES do chown
+# Permissões
 RUN set -eux; \
-    mkdir -p /run/nginx /etc/nginx/conf.d /var/log/supervisor /var/log/nginx "${APP_DIR}"; \
+    mkdir -p /var/log/supervisor /var/log/nginx "${APP_DIR}"; \
     chown -R www-data:www-data "${APP_DIR}"; \
     chown -R root:root /var/log/supervisor /var/log/nginx /run/nginx
 
-# Define workdir (agora certamente existe)
+# Código da aplicação (se você usa volume em runtime, isso será sobrescrito — tudo bem)
 WORKDIR ${APP_DIR}
-
-# (Opcional) copie o código já com dono www-data
-# Remova se for montar volume em runtime.
 COPY --chown=www-data:www-data . ${APP_DIR}
 
 EXPOSE 8080
