@@ -1,17 +1,17 @@
 # =========================================
 # Azuriom - PHP 8.3 FPM (Alpine) + Nginx
-# Railway-ready (porta via $PORT)
+# Build com Composer (sem rede em runtime)
+# Railway-ready (PORT dinâmico)
 # =========================================
 
-FROM php:8.3-fpm-alpine
+FROM php:8.3-fpm-alpine AS base
 
-# ----- Variáveis úteis -----
 ENV APP_DIR=/var/www/azuriom \
     PORT=8080 \
     TZ=UTC \
     COMPOSER_ALLOW_SUPERUSER=1
 
-# ----- SO + libs + PHP extensions (compiladas com docker-php-ext-*) -----
+# SO + libs runtime
 RUN set -eux; \
     apk add --no-cache \
         nginx supervisor bash curl git tzdata ca-certificates \
@@ -20,40 +20,38 @@ RUN set -eux; \
         libzip-dev zlib-dev shadow gettext; \
     \
     apk add --no-cache --virtual .build-deps $PHPIZE_DEPS g++ gcc make pkgconf re2c; \
-    docker-php-ext-configure gd \
-        --with-jpeg \
-        --with-webp \
-        --with-freetype; \
-    docker-php-ext-install -j"$(nproc)" \
-        gd exif bcmath intl pdo pdo_pgsql zip opcache; \
+    docker-php-ext-configure gd --with-jpeg --with-webp --with-freetype; \
+    docker-php-ext-install -j"$(nproc)" gd exif bcmath intl pdo zip opcache; \
+    docker-php-ext-install -j"$(nproc)" pdo_pgsql; \
     pecl install redis && docker-php-ext-enable redis; \
     apk del .build-deps; \
     rm -rf /var/cache/apk/* /tmp/* /var/tmp/*
 
-# ----- Composer (multi-stage "light") -----
+# Composer bin
 COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 
-# ----- Diretórios do sistema + permissões -----
+# Diretórios sistema
 RUN set -eux; \
     mkdir -p /run/nginx /etc/nginx/conf.d \
              /var/log/supervisor /var/log/nginx \
              "${APP_DIR}"; \
-    chown -R www-data:www-data "${APP_DIR}"; \
-    chown -R root:root /var/log/supervisor /var/log/nginx /run/nginx
+    chown -R www-data:www-data "${APP_DIR}"
 
-# ----- Código da aplicação -----
 WORKDIR ${APP_DIR}
+
+# Copia projeto (incluindo composer.json/lock)
 COPY . ${APP_DIR}
 
-# ----- Arquivos de configuração (.docker/) -----
+# Configs
 COPY .docker/nginx.conf           /etc/nginx/nginx.conf
 COPY .docker/nginx-default.conf   /etc/nginx/conf.d/default.conf
 COPY .docker/supervisord.conf     /etc/supervisord.conf
 COPY .docker/zz-custom.ini        /usr/local/etc/php/conf.d/zz-custom.ini
+COPY .docker/php-fpm-www.conf     /usr/local/etc/php-fpm.d/www.conf
 COPY .docker/entrypoint.sh        /usr/local/bin/entrypoint.sh
 RUN chmod +x /usr/local/bin/entrypoint.sh
 
-# ----- Garantir .env.example (fallback, sem sobrescrever se já existir) -----
+# Gera .env.example se faltar (não sobrescreve se já existir)
 RUN set -eux; \
   if [ ! -f ".env.example" ]; then \
     printf "%s\n" \
@@ -73,7 +71,6 @@ RUN set -eux; \
 "" \
 "LOG_CHANNEL=stack" \
 "LOG_STACK=daily" \
-"LOG_DEPRECATIONS_CHANNEL=null" \
 "LOG_LEVEL=warning" \
 "" \
 "DB_CONNECTION=pgsql" \
@@ -107,16 +104,23 @@ RUN set -eux; \
 > .env.example ; \
   fi
 
-# ----- Permissões Laravel -----
+# ====== BUILD DEPS PHP/LARAVEL (Composer) ======
+# Fazemos o install no build para evitar timeout em runtime
 RUN set -eux; \
-    mkdir -p ${APP_DIR}/storage ${APP_DIR}/bootstrap/cache; \
-    chown -R www-data:www-data ${APP_DIR}/storage ${APP_DIR}/bootstrap/cache; \
-    find ${APP_DIR}/storage ${APP_DIR}/bootstrap/cache -type d -exec chmod 775 {} \;
+    if [ ! -f composer.json ]; then echo "composer.json não encontrado no projeto"; exit 1; fi; \
+    composer install --no-dev --prefer-dist --no-interaction --no-progress --optimize-autoloader; \
+    mkdir -p storage bootstrap/cache; \
+    chown -R www-data:www-data storage bootstrap/cache; \
+    find storage bootstrap/cache -type d -exec chmod 775 {} \;
 
-# ----- Healthcheck / Expose -----
+# Opcional: pre-gera cache do framework (sem exigir DB)
+RUN set -eux; \
+    cp -n .env.example .env || true; \
+    php artisan key:generate --force || true; \
+    php -r "file_exists('artisan') && @unlink('.env');" || true
+
 EXPOSE 8080
 HEALTHCHECK CMD wget -qO- http://127.0.0.1:${PORT}/ > /dev/null || exit 1
 
-# ----- Start -----
 ENTRYPOINT ["/usr/local/bin/entrypoint.sh"]
 CMD ["supervisord", "-c", "/etc/supervisord.conf"]
