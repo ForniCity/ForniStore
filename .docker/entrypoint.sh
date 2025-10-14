@@ -142,3 +142,4 @@ done
 
 echo ">> Inicialização completa. Iniciando Nginx + PHP-FPM na porta ${PORT_DEFAULT}..."
 exec "$@"
+
