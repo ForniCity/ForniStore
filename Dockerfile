@@ -2,13 +2,12 @@
 FROM node:18-alpine AS assets
 WORKDIR /app
 
-# Copia manifestos primeiro para cache
+# Cache de dependências
 COPY package*.json ./
 RUN if [ -f package-lock.json ]; then npm ci; else npm install; fi
 
-# Copia o resto do projeto e compila
+# Copia projeto e compila (Vite/Mix)
 COPY . .
-# Tenta Vite; se não existir, usa Laravel Mix (prod)
 RUN npm run build || npm run prod || npm run production || true
 
 # ---- Estágio 2: app PHP-FPM + Nginx ----
@@ -48,8 +47,7 @@ RUN chmod +x /entrypoint.sh
 WORKDIR ${APP_DIR}
 COPY . ${APP_DIR}
 
-# Copia assets compilados do estágio Node de forma segura
-# (traz tudo e move só o que existir)
+# Copia assets compilados do estágio Node (forma segura)
 COPY --from=assets /app/public /tmp/assets-public
 RUN set -eux; \
     mkdir -p ${APP_DIR}/public; \
@@ -57,6 +55,7 @@ RUN set -eux; \
     if [ -d /tmp/assets-public/css ];    then cp -R /tmp/assets-public/css    ${APP_DIR}/public/;  fi; \
     if [ -d /tmp/assets-public/js ];     then cp -R /tmp/assets-public/js     ${APP_DIR}/public/;  fi; \
     if [ -d /tmp/assets-public/vendor ]; then cp -R /tmp/assets-public/vendor ${APP_DIR}/public/;  fi; \
+    if [ -d /tmp/assets-public/themes ]; then cp -R /tmp/assets-public/themes ${APP_DIR}/public/;  fi; \
     if [ -f /tmp/assets-public/mix-manifest.json ]; then cp /tmp/assets-public/mix-manifest.json ${APP_DIR}/public/; fi
 
 # Dependências PHP (produção)
