@@ -1,0 +1,66 @@
+# =========================
+#  .dockerignore - Laravel
+# =========================
+
+# --- VCS ---
+.git
+.gitignore
+.gitattributes
+
+# --- SO / Editores ---
+.DS_Store
+Thumbs.db
+*.iml
+.idea
+.vscode
+*.sublime-*
+
+# --- Node ---
+node_modules
+npm-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+
+# --- PHP/Laravel (artefatos e caches pesados) ---
+vendor/                 # Será reinstalado com `composer install` no build
+.phpunit.result.cache
+phpunit.xml.cache
+coverage/
+storage/debugbar/
+storage/logs/
+storage/framework/cache/data/
+storage/framework/sessions/
+storage/framework/testing/
+storage/framework/views/
+
+# Banco local e dumps
+storage/*.sql
+storage/*.sqlite
+database/*.sqlite
+
+# Arquivos temporários e logs genéricos
+*.log
+*.tmp
+*.temp
+*.cache
+
+# --- Ambientes ---
+.env
+.env.*                  # mantém fora do build
+!.env.example           # mas inclui o exemplo
+
+# --- CI / Docs (opcional incluir no build) ---
+.github/
+.gitlab/
+.gitlab-ci.yml
+.circleci/
+docs/
+
+# --- Docker local ---
+docker-compose*.yml
+docker-compose*.yaml
+
+# --- IMPORTANTE: manter configs necessárias ---
+!.docker/
+!.docker/**
+!nginx.conf
