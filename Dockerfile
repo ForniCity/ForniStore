@@ -18,12 +18,21 @@ RUN npm run build || npm run prod
 # ============================
 FROM php:8.2-fpm-alpine
 
+# ============================
+# Corrige mirrors do Alpine (Railway fix)
+# ============================
+RUN sed -i 's|https://dl-cdn.alpinelinux.org/alpine|https://mirror.clarkson.edu/alpine|g' /etc/apk/repositories \
+ || sed -i 's|https://dl-cdn.alpinelinux.org/alpine|https://mirror.leaseweb.net/alpine|g' /etc/apk/repositories \
+ && apk update
+
+# ============================
 # Instala pacotes essenciais
+# ============================
 RUN apk add --no-cache \
     nginx supervisor bash curl git unzip \
     icu-dev oniguruma-dev postgresql-dev libzip-dev \
     libjpeg-turbo-dev libpng-dev freetype-dev \
-    libpq gettext
+    libpq gettext pkgconfig
 
 # Extensões PHP obrigatórias para Laravel/Azuriom
 RUN docker-php-ext-configure gd --with-jpeg --with-freetype \
