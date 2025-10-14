@@ -1,10 +1,11 @@
 #!/usr/bin/env bash
 set -e
 
-# Ajusta permissões do diretório do app
-chown -R www-data:www-data /var/www/azuriom || true
+# Garante diretórios e permissões de runtime/log
+mkdir -p /run/nginx /var/log/nginx /var/log/supervisor
+chown -R root:root /run/nginx /var/log/nginx /var/log/supervisor
 
-# Garante diretórios de runtime do nginx
-mkdir -p /run/nginx /var/log/nginx
+# App pertence ao www-data para o PHP-FPM
+chown -R www-data:www-data /var/www/azuriom || true
 
 exec "$@"
