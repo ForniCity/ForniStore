@@ -23,27 +23,25 @@ COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 # Diretórios necessários
 RUN mkdir -p /run/nginx /etc/nginx/conf.d
 
-# ---- Configurações que te enviei ----
+# ---- Configurações em .docker/ ----
 # Nginx
-COPY ./nginx.conf /etc/nginx/nginx.conf
-COPY ./nginx-default.conf /etc/nginx/conf.d/default.conf
+COPY ./.docker/nginx.conf /etc/nginx/nginx.conf
+COPY ./.docker/nginx-default.conf /etc/nginx/conf.d/default.conf
 # (NÃO copie azuriom.conf para evitar conflito de porta no Railway)
 
 # PHP-FPM (pool) e ini custom
-COPY ./php-fpm-www.conf /usr/local/etc/php-fpm.d/www.conf
-COPY ./zz-custom.ini     /usr/local/etc/php/conf.d/zz-custom.ini
+COPY ./.docker/php-fpm-www.conf /usr/local/etc/php-fpm.d/www.conf
+COPY ./.docker/zz-custom.ini     /usr/local/etc/php/conf.d/zz-custom.ini
 
 # Supervisor
-COPY ./supervisord.conf /etc/supervisor/conf.d/supervisord.conf
+COPY ./.docker/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 
 # Entrypoint com migrações + envsubst do ${PORT}
-COPY ./entrypoint.sh /entrypoint.sh
+COPY ./.docker/entrypoint.sh /entrypoint.sh
 RUN chmod +x /entrypoint.sh
 
 # Código da aplicação
 WORKDIR ${APP_DIR}
-# Copie seu projeto (Azuriom) para dentro da imagem
-# Se estiver usando o repositório do Azuriom como base do app, mantenha:
 COPY . ${APP_DIR}
 
 # Instala dependências do PHP (produção)
@@ -55,7 +53,6 @@ RUN mkdir -p storage bootstrap/cache \
  && chown -R www-data:www-data storage bootstrap/cache \
  && chmod -R ug+rw storage bootstrap/cache
 
-# Não exponha portas fixas — o Railway injeta ${PORT}
 # HEALTHCHECK opcional (verifica PHP-FPM via ping)
 HEALTHCHECK --interval=30s --timeout=5s --retries=3 CMD \
   SCRIPT_NAME=/ping SCRIPT_FILENAME=/ping REQUEST_METHOD=GET cgi-fcgi -bind -connect 127.0.0.1:9000 || exit 1
