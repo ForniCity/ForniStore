@@ -1,0 +1,14 @@
+[build]
+# Railway detecta Dockerfile automaticamente; isto é só ilustrativo
+
+[services.app]
+name = "azuriom-app"
+env = "production"
+# Railway expõe a porta do serviço web
+internal_port = 8080
+
+# Serviço "cron" usando o mesmo repo/imagen, rodando o scheduler
+[services.cron]
+name = "azuriom-cron"
+env = "production"
+start_cmd = "sh -lc 'cd /var/www/html && while true; do php artisan schedule:run; sleep 60; done'"
