@@ -1,94 +1,94 @@
 <?php
 
 return [
-    'title' => 'Installation',
+    'title' => 'Instalação',
 
-    'welcome' => 'Azuriom is the <strong>next generation</strong> game CMS, it\'s <strong>free</strong> and <strong>open-source</strong>, and is a <strong>modern, reliable, fast and secure</strong> alternative to existing CMS so you can have the <strong>best web experience possible</strong>.',
+    'welcome' => 'Azuriom é a <strong>próxima geração</strong> de CMS de jogos, é <strong>gratuito</strong> e <strong>open‑source</strong>, e é uma alternativa <strong>moderna, confiável, rápida e segura</strong> aos CMS existentes para que você possa ter a <strong>melhor experiência web possível</strong>.',
 
-    'back' => 'Back',
+    'back' => 'Voltar',
 
     'requirements' => [
-        'php' => 'PHP :version or higher',
-        'writable' => 'Write permission',
-        'rewrite' => 'URL rewrite enabled',
-        'extension' => 'Extension :extension',
-        'function' => 'Function :function enabled',
-        '64bit' => '64-bit PHP',
+        'php' => 'PHP :version ou superior',
+        'writable' => 'Permissão de escrita',
+        'rewrite' => 'Reescrita de URL habilitada',
+        'extension' => 'Extensão :extension',
+        'function' => 'Função :function habilitada',
+        '64bit' => 'PHP 64 bits',
 
-        'refresh' => 'Refresh requirements',
-        'success' => 'Azuriom is ready to be configured!',
-        'missing' => 'Your server doesn\'t have the necessary requirements to install Azuriom.',
+        'refresh' => 'Atualizar requisitos',
+        'success' => 'Azuriom está pronto para ser configurado!',
+        'missing' => 'Seu servidor não possui os requisitos necessários para instalar o Azuriom.',
 
         'help' => [
-            'writable' => 'You can try this command to grant write permission: <code>:command</code>.',
-            'rewrite' => 'You can follow the instructions in <a href="https://azuriom.com/docs/installation" target="_blank" rel="noopener noreferrer">our documentation</a> to enable URL rewriting.',
-            'htaccess' => 'The file <code>.htaccess</code> or <code>public/.htaccess</code> is missing. Make sure you have enabled hidden files and that the file is present.',
-            'extension' => 'You can try this command to install the missing PHP extensions: <code>:command</code>.<br>Once done, restart Apache or Nginx.',
-            'function' => 'You need to enable this function in the php.ini file of PHP by editing the value of <code>disable_functions</code>.',
+            'writable' => 'Você pode tentar este comando para conceder permissão de escrita: <code>:command</code>.',
+            'rewrite' => 'Você pode seguir as instruções em <a href="https://azuriom.com/docs/installation" target="_blank" rel="noopener noreferrer">nossa documentação</a> para habilitar a reescrita de URL.',
+            'htaccess' => 'O arquivo <code>.htaccess</code> ou <code>public/.htaccess</code> está faltando. Certifique‑se de que os arquivos ocultos estão habilitados e que o arquivo esteja presente.',
+            'extension' => 'Você pode tentar este comando para instalar as extensões PHP ausentes: <code>:command</code>.<br>Depois disso, reinicie o Apache ou Nginx.',
+            'function' => 'Você precisa habilitar esta função no arquivo php.ini do PHP editando o valor de <code>disable_functions</code>.',
         ],
     ],
 
     'database' => [
-        'title' => 'Database',
+        'title' => 'Banco de dados',
 
-        'type' => 'Type',
+        'type' => 'Tipo',
         'host' => 'Host',
-        'port' => 'Port',
-        'database' => 'Database',
-        'user' => 'User',
-        'password' => 'Password',
+        'port' => 'Porta',
+        'database' => 'Banco de dados',
+        'user' => 'Usuário',
+        'password' => 'Senha',
 
-        'warn' => 'This database type is not recommended and should only be used when it is not possible to do otherwise.',
+        'warn' => 'Este tipo de banco de dados não é recomendado e deve ser usado apenas quando não for possível fazer de outra forma.',
     ],
 
     'game' => [
-        'title' => 'Game',
+        'title' => 'Jogo',
 
-        'locale' => 'Locale',
+        'locale' => 'Localidade',
 
-        'warn' => 'Be careful, once the installation is finished it will not be possible to change the game or login method without reinstalling Azuriom entirely!',
+        'warn' => 'Atenção, uma vez que a instalação esteja concluída, não será possível alterar o jogo ou o método de login sem reinstalar completamente o Azuriom!',
 
-        'install' => 'Install',
+        'install' => 'Instalar',
 
         'user' => [
-            'title' => 'Admin account',
+            'title' => 'Conta de administrador',
 
-            'name' => 'Name',
-            'email' => 'E-Mail address',
-            'password' => 'Password',
-            'password_confirm' => 'Confirm password',
+            'name' => 'Nome',
+            'email' => 'Endereço de e‑mail',
+            'password' => 'Senha',
+            'password_confirm' => 'Confirmar senha',
         ],
 
         'minecraft' => [
-            'premium' => 'Login with Microsoft account (most secure but requires to have purchased Minecraft)',
+            'premium' => 'Login com conta Microsoft (mais seguro, mas requer ter adquirido o Minecraft)',
         ],
 
         'steam' => [
-            'profile' => 'Steam Profile URL',
-            'profile_info' => 'This Steam user will be admin on the site.',
+            'profile' => 'URL do perfil Steam',
+            'profile_info' => 'Este usuário Steam será administrador no site.',
 
-            'key' => 'Steam API Key',
-            'key_info' => 'You can find your Steam API Key on <a href="https://steamcommunity.com/dev/apikey" target="_blank" rel="noopener noreferrer">Steam</a>.',
+            'key' => 'Chave da API Steam',
+            'key_info' => 'Você pode encontrar sua chave da API Steam em <a href="https://steamcommunity.com/dev/apikey" target="_blank" rel="noopener noreferrer">Steam</a>.',
         ],
 
         'epic' => [
-            'id' => 'Epic ID of your account',
-            'id_info' => 'This user will be admin on the site. You can find your Epic ID on your <a href="https://www.epicgames.com/account/personal" target="_blank" rel="noopener noreferrer">Epic Games account</a>.',
+            'id' => 'ID Epic da sua conta',
+            'id_info' => 'Este usuário será administrador no site. Você pode encontrar seu ID Epic na sua <a href="https://www.epicgames.com/account/personal" target="_blank" rel="noopener noreferrer">conta Epic Games</a>.',
 
-            'client_id' => 'Epic Games Client ID',
-            'client_secret' => 'Epic Games Client Secret',
+            'client_id' => 'ID do Cliente Epic Games',
+            'client_secret' => 'Segredo do Cliente Epic Games',
 
-            'steps' => 'To get the Client ID and Client Secret, follow these steps:',
-            'step_1' => 'Go on the <a href="https://dev.epicgames.com/portal/" target="_blank" rel="noopener noreferrer">Epic Games Developer Portal</a> and create a new product.',
-            'step_2' => 'In the product settings, in the "Clients" tab, create a new client with the "GameClient" policy type and the following redirect URL: <code>:redirect</code>',
-            'step_3' => 'You can find the Client ID and Client Secret in the client settings (Edit on the right of the client).',
+            'steps' => 'Para obter o Client ID e o Client Secret, siga estas etapas:',
+            'step_1' => 'Acesse o <a href="https://dev.epicgames.com/portal/" target="_blank" rel="noopener noreferrer">Portal de Desenvolvedores da Epic Games</a> e crie um novo produto.',
+            'step_2' => 'Nas configurações do produto, na guia "Clientes", crie um novo cliente com o tipo de política "GameClient" e o seguinte URL de redirecionamento: <code>:redirect</code>',
+            'step_3' => 'Você pode encontrar o Client ID e o Client Secret nas configurações do cliente (Editar à direita do cliente).',
         ],
     ],
 
     'success' => [
-        'thanks' => 'Thanks for choosing Azuriom!',
-        'success' => 'Your website has been successfully installed, you can now use your website and make something awesome!',
-        'go' => 'Get started',
-        'support' => 'If you appreciate Azuriom and the work we provide, please don\'t forget to <a href="https://azuriom.com/support-us" target="_blank" rel="noopener noreferrer">support us</a>.',
+        'thanks' => 'Obrigado por escolher o Azuriom!',
+        'success' => 'Seu site foi instalado com sucesso, agora você pode usar seu site e fazer algo incrível!',
+        'go' => 'Começar',
+        'support' => 'Se você aprecia o Azuriom e o trabalho que fornecemos, por favor não se esqueça de <a href="https://azuriom.com/support-us" target="_blank" rel="noopener noreferrer">nos apoiar</a>.',
     ],
 ];

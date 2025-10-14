@@ -2,34 +2,34 @@
 
 return [
     'fivem' => [
-        'id' => 'Cfx.re ID',
-        'name' => 'Cfx.re username',
-        'commands' => 'You can use <code>{name}</code> for the username, <code>{id}</code> for the ID, <code>{fivem_id}</code> for Cfx.re ID, <code>{steam_id}</code> for the SteamID 64 and <code>{steam_hex}</code> for the HEX Steam ID',
+        'id' => 'ID Cfx.re',
+        'name' => 'Nome de usuário Cfx.re',
+        'commands' => 'Você pode usar <code>{name}</code> para o nome de usuário, <code>{id}</code> para o ID, <code>{fivem_id}</code> para o ID Cfx.re, <code>{steam_id}</code> para o SteamID 64 e <code>{steam_hex}</code> para o Steam ID HEX',
     ],
 
     'steam' => [
         'id' => 'SteamID 64',
-        'commands' => 'You can use <code>{name}</code> for the player username, <code>{steam_id}</code> for the player SteamID 64 and <code>{steam_id_32}</code> for the player SteamID 32.',
+        'commands' => 'Você pode usar <code>{name}</code> para o nome de usuário do jogador, <code>{steam_id}</code> para o SteamID 64 do jogador e <code>{steam_id_32}</code> para o SteamID 32 do jogador.',
     ],
 
     'epic' => [
-        'id' => 'Epic Games ID',
-        'commands' => 'You can use <code>{name}</code> for the player username and <code>{game_id}</code> for the player Epic Games ID.',
+        'id' => 'ID da Epic Games',
+        'commands' => 'Você pode usar <code>{name}</code> para o nome de usuário do jogador e <code>{game_id}</code> para o ID da Epic Games do jogador.',
     ],
 
     'xbox' => [
-        'missing' => 'This Microsoft account doesn\'t have a Xbox profile.',
+        'missing' => 'Esta conta da Microsoft não possui um perfil Xbox.',
     ],
 
     'minecraft' => [
         'id' => 'UUID',
-        'missing' => 'This Xbox account doesn\'t have a Minecraft profile.',
-        'child' => 'This account is a child (under 18) and must be added to a family by an adult in order to login.',
-        'commands' => 'You can use <code>{name}</code> for the player username and <code>{uuid}</code> for the player UUID',
+        'missing' => 'Esta conta Xbox não possui um perfil Minecraft.',
+        'child' => 'Esta conta é de um menor (menor de 18 anos) e deve ser adicionada a uma família por um adulto para poder entrar.',
+        'commands' => 'Você pode usar <code>{name}</code> para o nome de usuário do jogador e <code>{uuid}</code> para o UUID do jogador',
     ],
 
     'minecraft_bedrock' => [
         'id' => 'XUID',
-        'commands' => 'You can use <code>{name}</code> for the player username and <code>{xuid}</code> for the player XUID',
+        'commands' => 'Você pode usar <code>{name}</code> para o nome de usuário do jogador e <code>{xuid}</code> para o XUID do jogador',
     ],
 ];

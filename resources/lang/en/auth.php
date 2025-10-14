@@ -4,76 +4,76 @@ return [
 
     /*
     |--------------------------------------------------------------------------
-    | Authentication Language Lines
+    | Linhas de idioma de autenticação
     |--------------------------------------------------------------------------
     |
-    | The following language lines are used during authentication for various
-    | messages that we need to display to the user. You are free to modify
-    | these language lines according to your application's requirements.
+    | As seguintes linhas de idioma são usadas durante a autenticação para
+    | diversas mensagens que precisamos exibir ao usuário. Fique à vontade
+    | para modificar essas linhas conforme os requisitos da sua aplicação.
     |
     */
 
-    'failed' => 'These credentials do not match our records.',
-    'throttle' => 'Too many login attempts. Please try again in :seconds seconds.',
+    'failed' => 'Estas credenciais não correspondem aos nossos registros.',
+    'throttle' => 'Muitas tentativas de login. Por favor, tente novamente em :seconds segundos.',
 
-    'register' => 'Register',
-    'login' => 'Login',
-    'logout' => 'Logout',
-    'verify' => 'Verify Your Email Address',
+    'register' => 'Registrar',
+    'login' => 'Entrar',
+    'logout' => 'Sair',
+    'verify' => 'Verifique seu endereço de e‑mail',
     'passwords' => [
-        'confirm' => 'Confirm password',
-        'reset' => 'Reset Password',
-        'send' => 'Send Password Reset Link',
+        'confirm' => 'Confirmar senha',
+        'reset' => 'Redefinir senha',
+        'send' => 'Enviar link de redefinição de senha',
     ],
     'fpc' => [
-        'title' => 'Forced password change',
-        'line1' => 'Your account has been temporarily blocked for security reasons. To unblock it, please change your password.',
-        'line2' => 'If you need more information or have problems unlocking your account, please contact the site administrator.',
-        'action' => 'Change my password',
+        'title' => 'Alteração de senha obrigatória',
+        'line1' => 'Sua conta foi temporariamente bloqueada por motivos de segurança. Para desbloqueá‑la, altere sua senha.',
+        'line2' => 'Se você precisar de mais informações ou tiver problemas para desbloquear sua conta, entre em contato com o administrador do site.',
+        'action' => 'Alterar minha senha',
     ],
-    'name' => 'Username',
-    'email' => 'Email Address',
-    'password' => 'Password',
-    'confirm_password' => 'Confirm Password',
-    'current_password' => 'Current password',
+    'name' => 'Nome de usuário',
+    'email' => 'Endereço de e‑mail',
+    'password' => 'Senha',
+    'confirm_password' => 'Confirmar senha',
+    'current_password' => 'Senha atual',
 
-    'conditions' => 'I accept the <a href=":url" target="_blank">conditions</a>.',
+    'conditions' => 'Eu aceito as <a href=":url" target="_blank">condições</a>.',
 
     '2fa' => [
-        'code' => 'Two Factor Auth Code',
-        'invalid' => 'Invalid code',
+        'code' => 'Código de autenticação de dois fatores',
+        'invalid' => 'Código inválido',
     ],
 
-    'suspended' => 'This account is suspended.',
+    'suspended' => 'Esta conta está suspensa.',
 
-    'maintenance' => 'The website is under maintenance.',
+    'maintenance' => 'O site está em manutenção.',
 
-    'remember' => 'Remember Me',
-    'forgot_password' => 'Forgot Your Password?',
+    'remember' => 'Lembrar‑me',
+    'forgot_password' => 'Esqueceu sua senha?',
 
     'verification' => [
-        'sent' => 'A fresh verification link has been sent to your email address.',
-        'check' => 'Before proceeding, please check your email for a verification link.',
-        'request' => 'If you did not receive the email you can request another.',
-        'resend' => 'Resend mail',
+        'sent' => 'Um novo link de verificação foi enviado para seu endereço de e‑mail.',
+        'check' => 'Antes de prosseguir, verifique seu e‑mail para ver o link de verificação.',
+        'request' => 'Se você não recebeu o e‑mail, pode solicitar outro.',
+        'resend' => 'Reenviar e‑mail',
     ],
 
-    'confirmation' => 'Please confirm your password before continuing.',
+    'confirmation' => 'Por favor, confirme sua senha antes de continuar.',
 
     'mail' => [
         'reset' => [
-            'subject' => 'Reset Password Notification',
-            'line1' => 'You are receiving this email because we received a password reset request for your account.',
-            'action' => 'Reset Password',
-            'line2' => 'This password reset link will expire in :count minutes.',
-            'line3' => 'If you did not request a password reset, no further action is required.',
+            'subject' => 'Notificação de redefinição de senha',
+            'line1' => 'Você está recebendo este e‑mail porque recebemos uma solicitação de redefinição de senha para sua conta.',
+            'action' => 'Redefinir senha',
+            'line2' => 'Este link de redefinição de senha irá expirar em :count minutos.',
+            'line3' => 'Se você não solicitou uma redefinição de senha, nenhuma outra ação é necessária.',
         ],
 
         'verify' => [
-            'subject' => 'Verify Email Address',
-            'line1' => 'Please click the button below to verify your email address. This link is valid for :count minutes.',
-            'action' => 'Verify Email Address',
-            'line2' => 'If you did not create an account, no further action is required.',
+            'subject' => 'Verificar endereço de e‑mail',
+            'line1' => 'Clique no botão abaixo para verificar seu endereço de e‑mail. Este link é válido por :count minutos.',
+            'action' => 'Verificar endereço de e‑mail',
+            'line2' => 'Se você não criou uma conta, nenhuma outra ação é necessária.',
         ],
     ],
 ];

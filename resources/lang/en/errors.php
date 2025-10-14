@@ -1,41 +1,41 @@
 <?php
 
 return [
-    'error' => 'Error',
-    'code' => 'Error :code',
-    'home' => 'Back to home',
-    'whoops' => 'Whoops!',
+    'error' => 'Erro',
+    'code' => 'Erro :code',
+    'home' => 'Voltar para a página inicial',
+    'whoops' => 'Ops!',
 
     '401' => [
-        'title' => 'Unauthorized',
-        'message' => 'You are not authorized to access this page.',
+        'title' => 'Não autorizado',
+        'message' => 'Você não está autorizado a acessar esta página.',
     ],
     '403' => [
-        'title' => 'Forbidden',
-        'message' => 'You are forbidden from accessing this page.',
+        'title' => 'Proibido',
+        'message' => 'Você está proibido de acessar esta página.',
     ],
     '404' => [
-        'title' => 'Not Found',
-        'message' => 'The page you are looking for could not be found.',
+        'title' => 'Não encontrado',
+        'message' => 'A página que você está procurando não pôde ser encontrada.',
     ],
     '419' => [
-        'title' => 'Page Expired',
-        'message' => 'Your session has expired. Please refresh and try again.',
+        'title' => 'Página expirada',
+        'message' => 'Sua sessão expirou. Por favor, atualize e tente novamente.',
     ],
     '429' => [
-        'title' => 'Too Many Requests',
-        'message' => 'You are making too many requests to our servers. Please try again later.',
+        'title' => 'Muitas solicitações',
+        'message' => 'Você está fazendo muitas solicitações aos nossos servidores. Por favor, tente novamente mais tarde.',
     ],
     '500' => [
-        'title' => 'Server Error',
-        'message' => 'Whoops, something went wrong on our servers. Please try again later.',
+        'title' => 'Erro do servidor',
+        'message' => 'Ops, algo deu errado em nossos servidores. Por favor, tente novamente mais tarde.',
     ],
     '503' => [
-        'title' => 'Service Unavailable',
-        'message' => 'We are doing some maintenance. Please check back soon.',
+        'title' => 'Serviço indisponível',
+        'message' => 'Estamos fazendo alguma manutenção. Por favor, volte em breve.',
     ],
 
     'fallback' => [
-        'message' => 'An error occurred. Please try again.',
+        'message' => 'Ocorreu um erro. Por favor, tente novamente.',
     ],
 ];

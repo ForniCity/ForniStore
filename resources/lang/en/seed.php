@@ -4,24 +4,25 @@ return [
 
     /*
     |--------------------------------------------------------------------------
-    | Seed Language Lines
+    | Linhas de idioma de seed
     |--------------------------------------------------------------------------
     |
-    | The following language lines are used for seeding during installation.
+    | As seguintes linhas de idioma são usadas para popular dados durante a
+    | instalação.
     |
     */
 
     'navbar' => [
-        'home' => 'Home',
+        'home' => 'Início',
     ],
 
     'roles' => [
-        'member' => 'Member',
-        'admin' => 'Admin',
+        'member' => 'Membro',
+        'admin' => 'Administrador',
     ],
 
     'settings' => [
-        'copyright' => 'Copyright © :year Azuriom - All Rights Reserved.',
-        'money' => 'points',
+        'copyright' => 'Copyright © :year Azuriom - Todos os direitos reservados.',
+        'money' => 'pontos',
     ],
 ];

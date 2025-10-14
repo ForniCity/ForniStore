@@ -4,33 +4,33 @@ return [
 
     /*
     |--------------------------------------------------------------------------
-    | Mail Language Lines
+    | Linhas de idioma de e‑mail
     |--------------------------------------------------------------------------
     |
-    | The following language lines are used by the mail library to build
-    | the mails layout.
+    | As seguintes linhas de idioma são usadas pela biblioteca de e‑mail para
+    | construir o layout dos e‑mails.
     |
     */
 
-    'hello' => 'Hello!',
-    'whoops' => 'Whoops!',
+    'hello' => 'Olá!',
+    'whoops' => 'Ops!',
 
-    'regards' => 'Regards,',
+    'regards' => 'Saudações,',
 
-    'link' => "If you're having trouble clicking the \":actionText\" button, copy and paste the URL below into your web browser: [:displayableActionUrl](:actionURL)",
+    'link' => 'Se você está tendo problemas para clicar no botão ":actionText", copie e cole a URL abaixo em seu navegador: [:displayableActionUrl](:actionURL)',
 
-    'copyright' => '&copy; :year :name. All rights reserved.',
+    'copyright' => '&copy; :year :name. Todos os direitos reservados.',
 
     'test' => [
-        'subject' => 'Test email on :name',
-        'content' => 'If you can see this email, it means that sending emails from :name is working!',
+        'subject' => 'E‑mail de teste em :name',
+        'content' => 'Se você pode ver este e‑mail, significa que o envio de e‑mails de :name está funcionando!',
     ],
 
     'delete' => [
-        'subject' => 'Account deletion request',
-        'line1' => 'You are receiving this email because we received a deletion request for your account.',
-        'action' => 'Delete my account',
-        'line2' => 'This action cannot be undone. This will permanently delete your account and associated data. This link will expire in :count minutes.',
-        'line3' => 'If you did not request your account deletion, please make sure to review your security settings.',
+        'subject' => 'Solicitação de exclusão de conta',
+        'line1' => 'Você está recebendo este e‑mail porque recebemos uma solicitação de exclusão de sua conta.',
+        'action' => 'Excluir minha conta',
+        'line2' => 'Esta ação não pode ser desfeita. Isso excluirá permanentemente sua conta e os dados associados. Este link expirará em :count minutos.',
+        'line3' => 'Se você não solicitou a exclusão de sua conta, certifique‑se de revisar suas configurações de segurança.',
     ],
 ];
