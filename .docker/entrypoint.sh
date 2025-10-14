@@ -3,18 +3,21 @@ set -e
 
 APP_DIR="/var/www/azuriom"
 
-# Permissões básicas
+# Permissões mínimas para Laravel/Azuriom
 chown -R www-data:www-data "$APP_DIR/storage" "$APP_DIR/bootstrap/cache" || true
 
-# Symlink do storage
+# Symlink public/storage -> storage/app/public
 if [ ! -L "$APP_DIR/public/storage" ] && [ -d "$APP_DIR/storage/app/public" ]; then
   ln -s "$APP_DIR/storage/app/public" "$APP_DIR/public/storage" || true
 fi
 
-# Inicia o PHP-FPM em background
+# Teste de sintaxe do Nginx (falha cedo se houver erro)
+nginx -t || { echo "[entrypoint] nginx.conf inválido"; exit 1; }
+
+# Inicia PHP-FPM em background
 php-fpm -D
 
-# ⚙️ Scheduler do Laravel a cada 60s, em background
+# Loop do scheduler do Laravel (a cada 60s), em background
 (
   echo "[scheduler] loop iniciado"
   while true; do
@@ -23,5 +26,5 @@ php-fpm -D
   done
 ) &
 
-# Inicia o Nginx no foreground (mantém o container vivo)
+# Nginx no foreground mantém o container vivo
 nginx -g "daemon off;"
