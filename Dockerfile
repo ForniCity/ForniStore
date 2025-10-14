@@ -26,11 +26,11 @@ COPY --chown=www-data:www-data . /var/www/azuriom/
 COPY --from=vendor /app/vendor /var/www/azuriom/vendor
 
 # Configurações do Nginx (global + vhost)
-COPY docker/nginx.conf /etc/nginx/nginx.conf
-COPY docker/azuriom.conf /etc/nginx/conf.d/azuriom.conf
+COPY .docker/nginx.conf /etc/nginx/nginx.conf
+COPY .docker/azuriom.conf /etc/nginx/conf.d/azuriom.conf
 
 # Entrypoint com scheduler embutido
-COPY docker/entrypoint.sh /usr/local/bin/entrypoint.sh
+COPY .docker/entrypoint.sh /usr/local/bin/entrypoint.sh
 RUN chmod +x /usr/local/bin/entrypoint.sh
 
 # Porta pública (Railway injeta $PORT; 8080 é fallback local)
