@@ -1,11 +1,16 @@
 #!/usr/bin/env bash
-set -e
+set -euo pipefail
 
-# Garante diretórios e permissões de runtime/log
-mkdir -p /run/nginx /var/log/nginx /var/log/supervisor
-chown -R root:root /run/nginx /var/log/nginx /var/log/supervisor
+# Ajuste de timezone do sistema (opcional)
+if [ -n "${TZ:-}" ]; then
+  echo "$TZ" > /etc/timezone || true
+fi
 
-# App pertence ao www-data para o PHP-FPM
-chown -R www-data:www-data /var/www/azuriom || true
+# Garante que diretórios de runtime existem
+mkdir -p /run/nginx
 
-exec "$@"
+# Dica: se precisar rodar migrações, seeds, etc., faça aqui:
+# php artisan migrate --force || true
+
+# Sobe o Supervisor em primeiro plano (logs no STDOUT/ERR)
+exec /usr/bin/supervisord -c /etc/supervisord.conf
