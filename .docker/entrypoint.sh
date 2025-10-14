@@ -24,10 +24,14 @@ cd "$APP_DIR"
 if [ ! -f ".env" ]; then
   echo ">> Gerando .env"
   cp .env.example .env || true
-
-  # Garante APP_KEY
-  su -s /bin/sh -c 'php artisan key:generate --force' www-data || true
 fi
+
+# Garante ownership/perm do .env antes de gerar APP_KEY
+chown www-data:www-data .env || true
+chmod 664 .env || true
+
+# Garante APP_KEY (ignora erro se já existir)
+su -s /bin/sh -c 'php artisan key:generate --force || true' www-data
 
 # Permissões essenciais
 chown -R www-data:www-data storage bootstrap/cache || true
