@@ -17,7 +17,7 @@ RUN set -eux; \
         nginx supervisor bash curl git tzdata ca-certificates \
         libjpeg-turbo-dev libpng-dev libwebp-dev freetype-dev \
         postgresql-dev icu-dev oniguruma-dev \
-        libzip-dev zlib-dev shadow; \
+        libzip-dev zlib-dev shadow gettext; \
     \
     apk add --no-cache --virtual .build-deps $PHPIZE_DEPS g++ gcc make pkgconf re2c; \
     docker-php-ext-configure gd \

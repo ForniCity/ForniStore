@@ -5,8 +5,13 @@ APP_DIR="/var/www/azuriom"
 PORT_DEFAULT="${PORT:-8080}"
 
 # Injetar a porta no Nginx em runtime
-envsubst '$PORT' < /etc/nginx/conf.d/default.conf > /etc/nginx/conf.d/default.conf.tmp
-mv /etc/nginx/conf.d/default.conf.tmp /etc/nginx/conf.d/default.conf
+if command -v envsubst >/dev/null 2>&1; then
+  envsubst '$PORT' < /etc/nginx/conf.d/default.conf > /etc/nginx/conf.d/default.conf.tmp
+  mv /etc/nginx/conf.d/default.conf.tmp /etc/nginx/conf.d/default.conf
+else
+  # Fallback caso envsubst não exista por algum motivo
+  sed -e "s|\${PORT}|${PORT_DEFAULT}|g" -i /etc/nginx/conf.d/default.conf
+fi
 
 cd "$APP_DIR"
 
