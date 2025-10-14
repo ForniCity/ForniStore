@@ -4,27 +4,25 @@ set -euo pipefail
 APP_DIR="/var/www/azuriom"
 PORT_DEFAULT="${PORT:-8080}"
 
-# Caminho do volume persistente (pode ser configurado via variável do Railway)
+# Caminho do volume persistente (configurável via Railway)
 PERSIST_DIR="${PERSIST_DIR:-/data}"
-
 mkdir -p "$PERSIST_DIR"
 
 echo ">> Usando volume persistente em: $PERSIST_DIR"
 echo ">> Porta configurada: ${PORT_DEFAULT}"
 
-# Remove conf antiga se existir
+# Remove conf antiga, se existir
 [ -f /etc/nginx/conf.d/azuriom.conf ] && rm -f /etc/nginx/conf.d/azuriom.conf || true
 
 # ===============================
 # 🔧 Corrige porta dinâmica no Nginx
 # ===============================
 NGINX_CONF="/etc/nginx/conf.d/default.conf"
-if command -v envsubst >/dev/null 2>&1; then
-  envsubst '$PORT' < "$NGINX_CONF" > "${NGINX_CONF}.tmp"
-  mv "${NGINX_CONF}.tmp" "$NGINX_CONF"
+if grep -q 'listen' "$NGINX_CONF"; then
+  echo ">> Injetando porta dinâmica $PORT_DEFAULT no Nginx..."
+  sed -i "s|listen \([0-9]*\);|listen ${PORT_DEFAULT};|g" "$NGINX_CONF"
 else
-  sed -e "s|\${PORT:-8080}|${PORT_DEFAULT}|g" -i "$NGINX_CONF"
-  sed -e "s|\${PORT}|${PORT_DEFAULT}|g" -i "$NGINX_CONF"
+  echo "listen ${PORT_DEFAULT};" >> "$NGINX_CONF"
 fi
 
 # ===============================
@@ -52,6 +50,12 @@ fi
 # Linka o .env para o volume
 rm -f .env || true
 ln -s "$PERSIST_DIR/env/.env" .env
+
+# Corrige permissões antes de gerar APP_KEY
+if [ -f ".env" ]; then
+  chown www-data:www-data .env
+  chmod 664 .env
+fi
 
 # Helpers para modificar o .env
 ensure_env () {
@@ -101,11 +105,10 @@ ln -sfn "$PERSIST_DIR/themes" resources/themes
 # Permissões corretas
 chown -R www-data:www-data "$PERSIST_DIR" || true
 chmod -R ug+rw "$PERSIST_DIR" || true
-
 chown -R www-data:www-data storage bootstrap/cache || true
 chmod -R ug+rw storage bootstrap/cache || true
 
-# Gera APP_KEY se não existir
+# Gera APP_KEY (sem erro de permissão)
 su -s /bin/sh -c 'php artisan key:generate --force || true' www-data
 
 # Cria symlink do storage/public se necessário
