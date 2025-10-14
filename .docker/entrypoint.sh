@@ -1,21 +1,60 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-cd "${APP_DIR:-/var/www/azuriom}"
+APP_DIR="/var/www/azuriom"
 
-# Timezone dinâmico (fallback em zz-custom.ini é UTC)
-if [ -n "${TZ:-}" ]; then
-  echo "date.timezone=${TZ}" > /usr/local/etc/php/conf.d/99-timezone.ini || true
+cd "${APP_DIR}"
+
+echo ">> Ajustando permissões..."
+chown -R www-data:www-data "${APP_DIR}"
+chmod -R ug+rwX "${APP_DIR}/storage" "${APP_DIR}/bootstrap/cache" "${APP_DIR}/public" || true
+
+# ----------------------------------------------------------------------
+# Garante .env.example e .env
+# ----------------------------------------------------------------------
+if [ ! -f ".env.example" ]; then
+  echo ">> .env.example não encontrado — criando um padrão..."
+  cat > .env.example <<'EOF'
+APP_NAME=Azuriom
+APP_ENV=production
+APP_KEY=
+APP_DEBUG=false
+APP_TIMEZONE=UTC
+APP_URL=http://localhost
+
+APP_LOCALE=en
+LOG_CHANNEL=stack
+LOG_LEVEL=debug
+
+AZURIOM_GAME=mc-offline
+
+DB_CONNECTION=pgsql
+DB_HOST=postgres.railway.internal
+DB_PORT=5432
+DB_DATABASE=railway
+DB_USERNAME=postgres
+DB_PASSWORD=
+
+SESSION_DRIVER=file
+QUEUE_CONNECTION=sync
+CACHE_DRIVER=file
+FILESYSTEM_DISK=local
+EOF
+  chown www-data:www-data .env.example
 fi
 
-mkdir -p /run/nginx
+if [ ! -f ".env" ]; then
+  echo ">> .env não existe — copiando de .env.example"
+  cp .env.example .env
+  chown www-data:www-data .env
+fi
 
-# Instala dependências PHP/Laravel/Azuriom no volume vazio
-if [ ! -f "vendor/autoload.php" ]; then
+# ----------------------------------------------------------------------
+# Composer (instala vendor se estiver ausente)
+# ----------------------------------------------------------------------
+if [ ! -d "vendor" ]; then
   echo ">> vendor/ ausente. Executando Composer..."
-
   if [ -f "composer.lock" ]; then
-    echo ">> Encontrado composer.lock — rodando 'composer install' (produção)."
     composer install --no-dev --prefer-dist --no-progress --no-interaction
   else
     echo ">> Sem composer.lock — rodando 'composer update' (produção)."
@@ -23,14 +62,27 @@ if [ ! -f "vendor/autoload.php" ]; then
   fi
 fi
 
-# Comandos Laravel/Azuriom seguros
-if [ -f ".env" ]; then
-  php artisan key:generate --force || true
-  php artisan storage:link || true
-  php artisan config:cache || true
-  php artisan route:cache || true
-  php artisan view:cache || true
-  # php artisan migrate --force || true  # habilite se quiser migrar automaticamente
+# ----------------------------------------------------------------------
+# Tarefas do Laravel/Azuriom executadas como www-data
+# ----------------------------------------------------------------------
+echo ">> Preparando app (artisan)..."
+su -s /bin/sh -c 'php artisan key:generate --force || true' www-data
+
+# storage:link com fallback
+if [ ! -L "public/storage" ]; then
+  rm -rf public/storage
+  if su -s /bin/sh -c 'php artisan storage:link' www-data; then
+    echo ">> storage:link criado com sucesso."
+  else
+    echo ">> Falhou criar symlink — executando fallback (cópia)."
+    mkdir -p public/storage
+    cp -R storage/app/public/* public/storage/ 2>/dev/null || true
+    chown -R www-data:www-data public/storage
+  fi
 fi
 
-exec /usr/bin/supervisord -c /etc/supervisord.conf
+# Pastas críticas sempre graváveis
+find storage bootstrap/cache -type d -exec chmod 775 {} \; || true
+
+echo ">> Subindo serviços..."
+exec "$@"
