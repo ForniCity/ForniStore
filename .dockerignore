@@ -1,66 +1,57 @@
-# =========================
-#  .dockerignore - Laravel
-# =========================
-
-# --- VCS ---
+# Git
 .git
 .gitignore
 .gitattributes
 
-# --- SO / Editores ---
-.DS_Store
-Thumbs.db
-*.iml
-.idea
-.vscode
-*.sublime-*
-
-# --- Node ---
+# Node / front-end
 node_modules
 npm-debug.log*
-yarn-error.log*
-.pnpm-debug.log*
+yarn.lock
+pnpm-lock.yaml
+dist
+build
+.cache
+.next
+out
+coverage
 
-# --- PHP/Laravel (artefatos e caches pesados) ---
-vendor/                 # Será reinstalado com `composer install` no build
-.phpunit.result.cache
-phpunit.xml.cache
-coverage/
-storage/debugbar/
-storage/logs/
-storage/framework/cache/data/
-storage/framework/sessions/
-storage/framework/testing/
-storage/framework/views/
+# Python
+__pycache__/
+*.py[cod]
+.venv
+venv
 
-# Banco local e dumps
-storage/*.sql
-storage/*.sqlite
-database/*.sqlite
+# PHP / Composer
+vendor
+composer.lock
+composer.phar
 
-# Arquivos temporários e logs genéricos
+# IDE / SO / editor
+.vscode
+.idea
+*.swp
+.DS_Store
+Thumbs.db
+
+# Logs e temporários
 *.log
-*.tmp
-*.temp
-*.cache
+logs
+storage/logs
+tmp
+temp
+.cache
+*.pid
 
-# --- Ambientes ---
+# Arquivos sensíveis
 .env
-.env.*                  # mantém fora do build
-!.env.example           # mas inclui o exemplo
+.env.*
+docker-compose.override.yml
 
-# --- CI / Docs (opcional incluir no build) ---
-.github/
-.gitlab/
-.gitlab-ci.yml
-.circleci/
-docs/
+# Tests/artifacts
+.jest
+phpunit.xml.cache
 
-# --- Docker local ---
-docker-compose*.yml
-docker-compose*.yaml
-
-# --- IMPORTANTE: manter configs necessárias ---
+# Docker
+docker-compose.yml
+Dockerfile
 !.docker/
-!.docker/**
-!nginx.conf

@@ -1,51 +1,51 @@
-# Base PHP-FPM com Alpine
+# Base com PHP-FPM 8.3 em Alpine
 FROM php:8.3-fpm-alpine
 
 # Variáveis
-ENV APP_DIR="/var/www/azuriom"
+ENV APP_DIR=/var/www/azuriom \
+    PHP_INI_DIR=/usr/local/etc/php
 
-# Pacotes de sistema e extensões necessárias
-RUN set -eux; \
-    apk add --no-cache \
-      nginx curl git bash supervisor \
-      icu-dev oniguruma-dev libzip-dev \
-      libpng-dev libjpeg-turbo-dev libwebp-dev freetype-dev \
-      postgresql17-dev \
-      $PHPIZE_DEPS; \
-    docker-php-ext-configure gd --with-jpeg --with-webp --with-freetype; \
-    docker-php-ext-install -j$(nproc) \
-      gd intl zip exif opcache bcmath pdo; \
-    docker-php-ext-install -j$(nproc) pdo_pgsql; \
-    # Usuário www-data já existe; criar diretórios exigidos por nginx/php
-    mkdir -p /run/nginx /etc/nginx/conf.d "$APP_DIR"; \
-    # Composer
-    curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
+# Pacotes de sistema (nginx, build-base, libs)
+RUN apk add --no-cache \
+      nginx supervisor bash curl git tzdata ca-certificates \
+      libjpeg-turbo-dev libpng-dev libwebp-dev freetype-dev \
+      postgresql-dev \
+      icu-dev oniguruma-dev \
+    && apk add --no-cache --virtual .build-deps $PHPIZE_DEPS \
+      autoconf make g++ \
+    # Config GD (se você for usar imagens no PHP)
+    && docker-php-ext-configure gd \
+         --with-jpeg \
+         --with-webp \
+         --with-freetype \
+    # Instala extensões do PHP (como nos seus logs)
+    && docker-php-ext-install -j"$(nproc)" \
+         gd exif bcmath pdo pdo_pgsql opcache \
+    # Limpa dependências de build
+    && apk del .build-deps \
+    && rm -rf /var/cache/apk/* /tmp/* /var/tmp/*
 
-# Diretório de trabalho
-WORKDIR $APP_DIR
+# Diretórios necessários
+RUN mkdir -p /run/nginx /etc/nginx/conf.d /var/log/supervisor
 
-# Copia apenas o composer primeiro (cache de dependências)
-COPY composer.json composer.lock ./
-RUN set -eux; \
-    composer install --no-dev --prefer-dist --no-progress --no-interaction --optimize-autoloader
+# App e permissões
+WORKDIR ${APP_DIR}
+RUN addgroup -S www-data && adduser -S www-data -G www-data || true \
+    && chown -R www-data:www-data ${APP_DIR}
 
-# Copia o restante do projeto
-COPY . .
-
-# Copia configs do Nginx e o entrypoint
-COPY .docker/azuriom.conf /etc/nginx/conf.d/azuriom.conf
-COPY nginx.conf /etc/nginx/nginx.conf
+# Copia configs
+COPY .docker/nginx.conf /etc/nginx/nginx.conf
+COPY .docker/nginx-default.conf /etc/nginx/conf.d/default.conf
+COPY .docker/zz-custom.ini ${PHP_INI_DIR}/conf.d/zz-custom.ini
+COPY .docker/supervisord.conf /etc/supervisord.conf
 COPY .docker/entrypoint.sh /usr/local/bin/entrypoint.sh
 
-# Permissões e preparação
-RUN set -eux; \
-    chmod +x /usr/local/bin/entrypoint.sh; \
-    chown -R www-data:www-data $APP_DIR; \
-    # otimizadores do laravel (se .env já existir no build; se não, tudo bem pular)
-    true
+# Permissões do entrypoint
+RUN chmod +x /usr/local/bin/entrypoint.sh
 
-# Exponha a porta HTTP do Nginx
 EXPOSE 80
+USER www-data
 
-# Entrypoint orquestra php-fpm + nginx
+# Inicia via supervisord (Nginx + PHP-FPM)
 ENTRYPOINT ["/usr/local/bin/entrypoint.sh"]
+CMD ["/usr/bin/supervisord", "-c", "/etc/supervisord.conf"]
