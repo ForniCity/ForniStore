@@ -54,7 +54,7 @@ RUN chmod +x /entrypoint.sh
 # Código da aplicação
 # ============================
 ENV APP_DIR=/var/www/azuriom
-ENV PERSIST_DIR=/data   # volume persistente padrão
+ENV PERSIST_DIR=/data
 WORKDIR ${APP_DIR}
 
 # Copia código do projeto
