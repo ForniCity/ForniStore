@@ -1,17 +1,24 @@
 <?php
 
-use Illuminate\Http\Request;
+/*
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Azuriom</title>
+</head>
+<body style="font-family: sans-serif; text-align: center; margin-top: 1rem">
+<h1>Azuriom - PHP installation issue</h1>
+<h2>PHP is not executed</h2>
+<p>If you see this page in your browser, it means that PHP is not installed or not configured properly on your server.</p>
+<p>On Linux with Apache2 you can try the following command: <code>apt install libapache2-mod-php</code></p>
+<p>If you are using another setup, please refer to your web server documentation.</p>
+<hr>
+<p>This is NOT an issue related to Azuriom.</p>
+</body>
+</html><!--
+*/
 
-define('LARAVEL_START', microtime(true));
+$validInstallationUrlRewrite = true;
 
-// Determine if the application is in maintenance mode...
-if (file_exists($maintenance = __DIR__.'/../storage/framework/maintenance.php')) {
-    require $maintenance;
-}
-
-// Register the Composer autoloader...
-require __DIR__.'/../vendor/autoload.php';
-
-// Bootstrap Laravel and handle the request...
-(require_once __DIR__.'/../bootstrap/app.php')
-    ->handleRequest(Request::capture());
+require __DIR__.'/../index.php';
