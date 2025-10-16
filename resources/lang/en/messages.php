@@ -110,7 +110,7 @@ return [
     'servers' => 'Servidores',
     'news' => 'Notícias',
     'welcome' => 'Bem‑vindo ao :name',
-    'copyright' => 'Desenvolvido por <a href="https://azuriom.com" target="_blank" rel="noopener noreferrer">Azuriom</a>.',
+    'copyright' => 'Desenvolvido por <a href="https://loja.fornicity.com.br" target="_blank" rel="noopener noreferrer">THG</a>.',
 
     'maintenance' => [
         'title' => 'Manutenção',
