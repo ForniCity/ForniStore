@@ -110,7 +110,7 @@ return [
     'servers' => 'Servidores',
     'news' => 'Notícias',
     'welcome' => 'Bem‑vindo ao :name',
-    'copyright' => '',
+    'copyright' => 'Desenvolvido por <a href="https://azuriom.com" target="_blank" rel="noopener noreferrer">Azuriom</a>.',
 
     'maintenance' => [
         'title' => 'Manutenção',
